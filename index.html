@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News Portal</title>
+    <style>
+        .parent-container{
+            display: grid;
+            grid-template-areas: "grid1 grid2 grid3 grid4"
+                                                    "grid5 grid6 grid7 grid8";
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .news-box{
+            background-color: aliceblue;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 2px solid red;
+        }
+
+        .news-box h3{
+            font-size: medium;
+            font-weight: bold;
+            color: brown;
+        }
+
+        .news-box img{
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        .news-box p{
+            /* In .news-box p{} which property at least I need to use for better ux */
+            line-height: 1.6;
+            padding: 5px;
+            color:#333;
+            font-size: 1rem;
+            text-align: justify;
+            max-height: 100px;
+            overflow: auto;
+            scrollbar-width: thin;
+            scrollbar-color: #aaa #eee;
+        }
+    </style>
+</head>
+<body>
+    <h1>Today's World</h1>
+    <h2>Breaking News:</h2>
+    <div class="parent-container"></div>
+    <script>
+        function createNewsBoxes(){
+            const div = document.createElement('div');
+            div.classList.add("news-box");
+            div.innerHTML = `
+            <h3></h3>
+            <img />
+            <p></p>
+            `
+            return div;
+        }
+
+        async function newsPortal(){
+            try {
+                const response = await fetch("https://newsdata.io/api/1/latest?apikey=pub_d135fff9ab354a42b398d46c3f991efa&q=hamas");
+                const data =await response.json();
+                const parent = document.querySelector('.parent-container');
+                data.results.slice(0,8).forEach((news,i)=> {
+                    const box = createNewsBoxes();
+                    //Cheaking Targeted Data in Console //
+                    const breakingNews = `
+                    Title : ${news.title}
+                    Image_Url : ${news.image_url}
+                    Description : ${news.description}
+                    `
+                    console.log(breakingNews)
+                    box.querySelector('h3').textContent = news.title || "No Title";
+                    box.querySelector('img').src = news.image_url || "./img/default.jpg";
+                    box.querySelector('img').alt = "No-Image";
+                    box.querySelector('p').textContent = news.description || "No news yet"
+
+                    parent.appendChild(box);
+                    
+                });
+            } catch (error) {
+                console.log("Error Details:", error);
+            }
+        };
+
+        newsPortal();
+        
+    </script>
+</body>
+</html>
