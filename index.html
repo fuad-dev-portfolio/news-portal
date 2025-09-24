@@ -5,12 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>News Portal</title>
     <style>
+        h1,h2{
+            text-align: center;
+        }
+
+        h1{
+            color: chocolate;
+        }
+
+        h2{
+            color: rgb(112, 51, 7);
+        }
         .parent-container{
             display: grid;
-            grid-template-areas: "grid1 grid2 grid3 grid4"
-                                                    "grid5 grid6 grid7 grid8";
-            grid-template-columns: 1fr 1fr 1fr 1fr;
-            grid-template-rows: 1fr 1fr;
+            /* grid-template-areas: "grid1 grid2 grid3 grid4"
+                                                    "grid5 grid6 grid7 grid8"; */
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            /* grid-template-rows: 1fr 1fr; */
             gap: 8px;
         }
 
@@ -20,7 +31,9 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            border: 2px solid red;
+            border: 2px solid #ddd;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* subtle shadow */
+            transition: transform 0.2s, box-shadow 0.2s;
         }
 
         .news-box h3{
@@ -48,6 +61,7 @@
             scrollbar-width: thin;
             scrollbar-color: #aaa #eee;
         }
+
     </style>
 </head>
 <body>
@@ -71,7 +85,7 @@
                 const response = await fetch("https://newsdata.io/api/1/latest?apikey=pub_d135fff9ab354a42b398d46c3f991efa&q=hamas");
                 const data =await response.json();
                 const parent = document.querySelector('.parent-container');
-                data.results.slice(0,8).forEach((news,i)=> {
+                data.results.forEach((news,i)=> {
                     const box = createNewsBoxes();
                     //Cheaking Targeted Data in Console //
                     const breakingNews = `
